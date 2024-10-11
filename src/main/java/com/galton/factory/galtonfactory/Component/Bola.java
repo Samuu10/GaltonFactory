@@ -1,6 +1,7 @@
 // src/main/java/com/galton/factory/galtonfactory/Component/Bola.java
 package com.galton.factory.galtonfactory.Component;
 
+import com.galton.factory.galtonfactory.Handler.MovimientoHandler;
 import lombok.Data;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -13,11 +14,17 @@ public class Bola implements Component, Runnable {
     private double posicionY;
     private int tamano;
     private Tablero tablero;
+    private MovimientoHandler movimientoHandler;
 
     private void mover() {
         posicionY += 10;
         synchronized (tablero) {
             posicionX = tablero.moverBola(posicionX);
+        }
+        try {
+            movimientoHandler.sendMovimiento(new Movimiento(posicionX, posicionY));
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -36,9 +43,5 @@ public class Bola implements Component, Runnable {
     @Override
     public String crear() {
         return "Bola creada";
-    }
-
-    public String toJson() {
-        return String.format("{\"posicionX\": %f, \"posicionY\": %f}", posicionX, posicionY);
     }
 }

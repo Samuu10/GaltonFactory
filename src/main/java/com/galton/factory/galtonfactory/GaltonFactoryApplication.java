@@ -2,6 +2,7 @@
 package com.galton.factory.galtonfactory;
 
 import com.galton.factory.galtonfactory.Component.*;
+import com.galton.factory.galtonfactory.Handler.MovimientoHandler;
 import com.galton.factory.galtonfactory.Service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -16,6 +17,9 @@ public class GaltonFactoryApplication implements CommandLineRunner {
 	@Autowired
 	private TableroService tableroService;
 
+	@Autowired
+	private MovimientoHandler movimientoHandler;
+
 	public static void main(String[] args) {
 		SpringApplication.run(GaltonFactoryApplication.class, args);
 	}
@@ -26,6 +30,7 @@ public class GaltonFactoryApplication implements CommandLineRunner {
 
 		for (int i = 0; i < 10; i++) {
 			Bola bola = bolaService.crearBola(250, 0, 10, tablero);
+			bola.setMovimientoHandler(movimientoHandler);
 			Thread hiloBola = new Thread(bola);
 			hiloBola.start();
 		}
