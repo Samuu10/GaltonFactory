@@ -10,19 +10,19 @@ import java.util.Random;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Tablero implements Component {
-    private int altura;           // Altura total del tablero
-    private int ancho;            // Ancho del tablero
-    private int niveles;          // Número de niveles en la pirámide
-    private Random random = new Random(); // Generador de números aleatorios
+    private int altura;
+    private int ancho;
+    private int niveles;
+    private Random random = new Random();
 
     public double moverBola(double posicionX) {
-        double desplazamiento = random.nextDouble() < 0.5 ? -1 : 1; // Movimiento aleatorio
+        double desplazamiento = random.nextDouble() < 0.5 ? -1 : 1;
         double nuevaPosicionX = posicionX + desplazamiento;
 
         if (nuevaPosicionX < 0) {
-            nuevaPosicionX = 0; // Límite izquierdo
+            nuevaPosicionX = 0;
         } else if (nuevaPosicionX > ancho) {
-            nuevaPosicionX = ancho; // Límite derecho
+            nuevaPosicionX = ancho;
         }
         return nuevaPosicionX;
     }
@@ -35,5 +35,9 @@ public class Tablero implements Component {
     @Override
     public String crear() {
         return "Tablero creado";
+    }
+
+    public String toJson() {
+        return String.format("{\"altura\": %d, \"ancho\": %d, \"niveles\": %d}", altura, ancho, niveles);
     }
 }

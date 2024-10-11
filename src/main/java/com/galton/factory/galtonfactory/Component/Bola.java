@@ -9,20 +9,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Bola implements Component, Runnable {
-    private double posicionX; // Posición X inicial de la bola (siempre desde el centro)
-    private double posicionY; // Posición Y (la altura desde donde cae)
-    private int tamano;       // Tamaño de la bola
+    private double posicionX;
+    private double posicionY;
+    private int tamano;
     private Tablero tablero;
 
-    // Método para simular la caída de la bola desde el centro siguiendo la distribución normal
-    public void caer(double desplazamientoX, double desplazamientoY) {
-        this.posicionX += desplazamientoX;
-        this.posicionY += desplazamientoY;
-    }
-
-    // Método para mover la bola
     private void mover() {
-        posicionY += 10; // Ajusta la velocidad de caída
+        posicionY += 10;
         synchronized (tablero) {
             posicionX = tablero.moverBola(posicionX);
         }
@@ -33,7 +26,7 @@ public class Bola implements Component, Runnable {
         while (posicionY < tablero.getAltura() - tamano) {
             mover();
             try {
-                Thread.sleep(100); // Espera para simular la caída
+                Thread.sleep(100);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -43,5 +36,9 @@ public class Bola implements Component, Runnable {
     @Override
     public String crear() {
         return "Bola creada";
+    }
+
+    public String toJson() {
+        return String.format("{\"posicionX\": %f, \"posicionY\": %f}", posicionX, posicionY);
     }
 }

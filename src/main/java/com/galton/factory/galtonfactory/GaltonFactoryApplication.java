@@ -1,25 +1,36 @@
+// src/main/java/com/galton/factory/galtonfactory/GaltonFactoryApplication.java
 package com.galton.factory.galtonfactory;
 
 import com.galton.factory.galtonfactory.Component.*;
+import com.galton.factory.galtonfactory.Service.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import java.util.Random;
-
 @SpringBootApplication
-public class GaltonFactoryApplication {
-	public static void main(String[] args) {
-		Random rd = new Random();
-		// Inicializa el tablero
-		Tablero tablero = new Tablero(500, 500, 10, rd);
+public class GaltonFactoryApplication implements CommandLineRunner {
+	@Autowired
+	private BolaService bolaService;
 
-		// Crea y lanza hilos para las bolas
+	@Autowired
+	private TableroService tableroService;
+
+	public static void main(String[] args) {
+		SpringApplication.run(GaltonFactoryApplication.class, args);
+	}
+
+	@Override
+	public void run(String... args) throws Exception {
+		Tablero tablero = tableroService.crearTablero(500, 500, 10);
+
 		for (int i = 0; i < 10; i++) {
-			Bola bola = new Bola(250, 0, 10, tablero); // Comienza desde el centro
+			Bola bola = bolaService.crearBola(250, 0, 10, tablero);
 			Thread hiloBola = new Thread(bola);
-			hiloBola.start(); // Inicia la caída de la bola
+			hiloBola.start();
 		}
 
-		// Aquí puedes agregar lógica adicional para controlar la simulación
-		// o la finalización de los hilos si es necesario.
+		// Exportar datos a JSON para D3.js
+		System.out.println(tablero.toJson());
 	}
 }
