@@ -2,6 +2,7 @@
 package com.galton.factory.galtonfactory.Handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.galton.factory.galtonfactory.Component.BufferMovimientos;
 import com.galton.factory.galtonfactory.Component.Movimiento;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -13,6 +14,7 @@ import java.util.List;
 public class MovimientoHandler extends TextWebSocketHandler {
     private final List<WebSocketSession> sessions = new ArrayList<>();
     private final ObjectMapper objectMapper = new ObjectMapper();
+    private final BufferMovimientos bufferMovimientos = new BufferMovimientos();
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
@@ -25,9 +27,14 @@ public class MovimientoHandler extends TextWebSocketHandler {
     }
 
     public void sendMovimiento(Movimiento movimiento) throws Exception {
+        bufferMovimientos.addMovimiento(movimiento);
         String json = objectMapper.writeValueAsString(movimiento);
         for (WebSocketSession session : sessions) {
             session.sendMessage(new TextMessage(json));
         }
+    }
+
+    public String exportMovimientosToJson() throws Exception {
+        return objectMapper.writeValueAsString(bufferMovimientos.getMovimientos());
     }
 }
