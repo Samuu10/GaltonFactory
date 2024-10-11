@@ -2,15 +2,54 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Galton Board</title>
-    <script src="js/d3.min.js"></script>
+    <title>Simulación de bolas - Distribución Normal</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
 </head>
 <body>
-<h1>Simulación de la Máquina de Galton</h1>
-<div id="galton-board"></div>
+<svg width="500" height="500" id="canvas"></svg>
+
 <script>
-    // Aquí se implementará la lógica de D3.js para simular la máquina de Galton
+    // Obtener datos de bolas desde la API
+    d3.json("/bolas").then(function (data) {
+        var svg = d3.select("#canvas");
+
+        // Crear círculos para representar las bolas
+        svg.selectAll("circle")
+            .data(data)
+            .enter()
+            .append("circle")
+            .attr("cx", 250) // Todas las bolas empiezan desde el centro (X = 250 en un SVG de 500x500)
+            .attr("cy", 0)   // Altura inicial (Y = 0)
+            .attr("r", 5)    // Radio de la bola
+            .attr("fill", "blue")
+            .transition()
+            .duration(2000)  // Simulación de caída
+            .attr("cy", function (d) {
+                return d.posicionY;
+            }) // Posición final Y (la bola cae)
+            .attr("cx", function (d) {
+                return d.posicionX;
+            }); // Posición final X (determinado por desplazamiento)
+    });
+        // Crear un tablero de ejemplo
+        const tablero = new Tablero(500, 500, 10);
+        const bolas = []; // Almacena las bolas
+
+        // Crear bolas y asignar posiciones iniciales
+        for (let i = 0; i < 10; i++) {
+        let bola = new Bola(250, 0, 10, tablero); // Desde el centro
+        bolas.push(bola);
+    }
+
+        // Iniciar la simulación
+        bolas.forEach(bola => {
+        let hiloBola = new Thread(bola);
+        hiloBola.start(); // Inicia la caída de la bola
+    });
+
+        // Visualizar las bolas en D3.js
+        // Aquí necesitarás un bucle que actualice las posiciones en función de la lógica del tablero
+
 </script>
 </body>
 </html>
