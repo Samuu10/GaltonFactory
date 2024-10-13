@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Movimiento {
+    //registra los movimientos de las bolas
     public double posicionX;
     public double posicionY;
     public int nivel;
@@ -19,11 +20,7 @@ public class Movimiento {
 
     @Override
     public String toString() {
+        //de esta manera se exportara a json
         return String.format("{\"posicionX\": %f, \"posicionY\": %f, \"nivel\": %d}", posicionX, posicionY, nivel);
-    }
-
-    public static String exportMovimientosToJson() throws Exception {
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.writeValueAsString(movimientos);
     }
 }

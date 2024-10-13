@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class BolaService {
+    //ejecuta el servicio Bola
     private final Fabrica fabricaBola = new EstacionTrabajoBola();
 
     public Bola crearBola(double posicionX, double posicionY, int tamano, Tablero tablero) {

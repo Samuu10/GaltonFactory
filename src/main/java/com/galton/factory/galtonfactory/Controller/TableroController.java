@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/tableros")
 public class TableroController {
+    //controlador del Tablero siguiendo el patron de diseño abstract factory
     @Autowired
     private TableroService tableroService;
 

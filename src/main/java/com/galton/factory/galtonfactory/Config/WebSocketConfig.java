@@ -1,4 +1,3 @@
-// src/main/java/com/galton/factory/galtonfactory/Config/WebSocketConfig.java
 package com.galton.factory.galtonfactory.Config;
 
 import com.galton.factory.galtonfactory.Component.Tablero;

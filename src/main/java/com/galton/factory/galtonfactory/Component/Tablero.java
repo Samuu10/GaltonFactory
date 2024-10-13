@@ -13,6 +13,7 @@ import java.util.Random;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Tablero implements Component {
+    //crea el tablero y registra los movimientos sobre este
     private int niveles;
     private double altura;
     private double ancho;
@@ -20,6 +21,7 @@ public class Tablero implements Component {
     private Random random = new Random();
 
     public double moverBola(double posicionX) {
+        //metodo que mueve la bola aleatoriamente a izquierda o derecha
         double desplazamiento = random.nextDouble() < 0.5 ? -1 : 1;
         double nuevaPosicionX = posicionX + desplazamiento;
 

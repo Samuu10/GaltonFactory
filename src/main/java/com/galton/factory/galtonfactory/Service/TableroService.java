@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class TableroService {
+    //Ejecuta el servicio tablero
     private final Fabrica fabricaTablero = new EstacionTrabajoTablero();
 
     public Tablero crearTablero(int altura, int ancho, int niveles) {

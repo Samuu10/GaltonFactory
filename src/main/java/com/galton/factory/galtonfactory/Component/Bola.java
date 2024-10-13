@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Bola implements Component, Runnable {
-    private int ballId; // Add ballId field
+    private int ballId;
     private double posicionX;
     private double posicionY;
     private int tamano;
@@ -24,7 +24,7 @@ public class Bola implements Component, Runnable {
             posicionX = tablero.moverBola(posicionX);
         }
         try {
-            movimientoHandler.sendMovimiento(new Movimiento(ballId, posicionX, posicionY, nivel)); // Pass ballId
+            movimientoHandler.sendMovimiento(new Movimiento(ballId, posicionX, posicionY, nivel));
         } catch (Exception e) {
             e.printStackTrace();
         }

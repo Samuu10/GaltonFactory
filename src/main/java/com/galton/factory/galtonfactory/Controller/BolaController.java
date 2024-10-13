@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/bolas")
 public class BolaController {
+    //controlador de la Bola siguiendo el patron de diseño abstract factory
     @Autowired
     private BolaService bolaService;
 

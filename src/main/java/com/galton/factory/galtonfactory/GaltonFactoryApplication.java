@@ -14,10 +14,12 @@ public class GaltonFactoryApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		int numberOfBalls = 100; // Set the number of balls here
+		//clase main que llama a movimientoHandler, clase principal que incluye la logica
+		int numberOfBalls = 100; //elige el numero de bolas
 
 		MovimientoHandler movimientoHandler = new MovimientoHandler();
 
+		//se simula la caida de las bolas seleccionadas
 		for (int i = 0; i < numberOfBalls; i++) {
 			final int ballId = i;
 			new Thread(() -> {
@@ -29,10 +31,9 @@ public class GaltonFactoryApplication implements CommandLineRunner {
 			}).start();
 		}
 
-		// Export movements to JSON after all threads have finished
-		// This is a simple way to wait for all threads to finish
+		//se exportan los registros de movimientos y cuadrantes llenos
 		System.out.println("Espere a que todas las bolas se carguen.");
-		Thread.sleep(5000); // Adjust the sleep time as needed
+		Thread.sleep(5000); // se espera a que terminen todos los hilos
 		movimientoHandler.exportMovimientosToJson();
 		movimientoHandler.exportCuadrantesToJson();
 	}
