@@ -11,7 +11,7 @@ El tablero de Galton es un dispositivo que ilustra la distribución binomial y l
 En esta simulación, las bolas caen a través de una serie de clavijas y se acumulan en contenedores en la parte inferior, 
 formando un histograma que muestra la distribución de las bolas.
 
-# ESTRUCTURA CODIGO PRINCIPAL
+# ESTRUCTURA CóDIGO PRINCIPAL
 
 1. **`Movimiento`**:
    - Representa el movimiento de una bola en el tablero.
