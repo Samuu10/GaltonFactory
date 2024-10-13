@@ -1,18 +1,22 @@
 // src/main/java/com/galton/factory/galtonfactory/Component/Tablero.java
 package com.galton.factory.galtonfactory.Component;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 import java.util.Random;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class Tablero implements Component {
-    private int altura;
-    private int ancho;
     private int niveles;
+    private double altura;
+    private double ancho;
+    private List<Bola> bolas;
     private Random random = new Random();
 
     public double moverBola(double posicionX) {
@@ -26,6 +30,12 @@ public class Tablero implements Component {
         }
         return nuevaPosicionX;
     }
+    public Tablero(int niveles, double altura, double ancho, Random random) {
+        this.niveles = niveles;
+        this.altura = altura;
+        this.ancho = ancho;
+        this.random = random;
+    }
 
     @Override
     public void run() {
@@ -35,9 +45,5 @@ public class Tablero implements Component {
     @Override
     public String crear() {
         return "Tablero creado";
-    }
-
-    public String toJson() {
-        return String.format("{\"altura\": %d, \"ancho\": %d, \"niveles\": %d}", altura, ancho, niveles);
     }
 }

@@ -1,54 +1,111 @@
-d3.json("movimientos.json").then(function(data) {
-    console.log("Datos cargados:", data); // Mensaje de depuración
-
+d3.json("movimientos.json").then(data => {
     const svg = d3.select("svg");
+    const padding = 20;
+    const width = +svg.attr("width") - 2 * padding;
+    const height = +svg.attr("height") - 2 * padding;
 
-    // Configurar escala para el gráfico
-    const xScale = d3.scaleLinear().domain([0, 500]).range([0, 600]);
-    const yScale = d3.scaleLinear().domain([0, 500]).range([0, 600]);
+    // Draw the inverted pyramid with vertical bars
+    const niveles = 10;
+    const nivelHeight = height / niveles;
 
-    // Dibujar el tablero
-    svg.append("rect")
-        .attr("width", 600)
-        .attr("height", 600)
-        .attr("fill", "lightgrey");
+    // Draw the final bar at the top center
+    svg.append("line")
+        .attr("x1", width / 2 + padding)
+        .attr("y1", padding)
+        .attr("x2", width / 2 + padding)
+        .attr("y2", padding + nivelHeight)
+        .attr("stroke", "black");
 
-    // Agrupar posiciones por bolas
-    const bolas = [];
-    let currentBola = [];
-    data.forEach((posicion, index) => {
-        currentBola.push(posicion);
-        if ((index + 1) % 10 === 0) { // Assuming each ball has 10 positions
-            bolas.push({ posiciones: currentBola });
-            currentBola = [];
+    for (let i = 0; i < niveles; i++) {
+        const levelWidth = width * (i + 1) / niveles;
+        const xOffset = (width - levelWidth) / 2 + padding;
+
+        // Draw vertical bars
+        for (let j = 0; j <= i; j++) {
+            const barX = xOffset + (j * levelWidth / i);
+            svg.append("line")
+                .attr("x1", barX)
+                .attr("y1", padding + i * nivelHeight)
+                .attr("x2", barX)
+                .attr("y2", padding + (i + 1) * nivelHeight)
+                .attr("stroke", "black");
         }
-    });
+    }
 
-    // Itera sobre las bolas
-    bolas.forEach(bola => {
-        console.log("Procesando bola:", bola); // Mensaje de depuración
+    // Group the data by ballId
+    const ballsData = d3.group(data, d => d.ballId);
 
-        const line = d3.line()
-            .x(d => xScale(d.posicionX))
-            .y(d => yScale(d.posicionY));
-
-        // Dibuja las líneas que representan los movimientos
-        svg.append("path")
-            .datum(bola.posiciones)
-            .attr("d", line)
-            .attr("stroke", "black")
-            .attr("fill", "none");
-
-        // Dibuja las bolas en el gráfico
-        svg.selectAll("circle")
-            .data(bola.posiciones)
-            .enter()
-            .append("circle")
+    // Function to animate each ball
+    function animateBall(ballData, delay) {
+        const ball = fallingBallsSvg.append("circle")
             .attr("class", "bola")
-            .attr("cx", d => xScale(d.posicionX))
-            .attr("cy", d => yScale(d.posicionY))
+            .attr("cx", width / 2 + padding) // Start at the top center
+            .attr("cy", padding)
             .attr("r", 5);
+
+        ballData.forEach((d, index) => {
+            const levelWidth = width * (d.nivel + 1) / niveles;
+            const xOffset = (width - levelWidth) / 2 + padding;
+            const cx = xOffset + d.posicionX * levelWidth;
+            const cy = padding + d.nivel * nivelHeight;
+
+            ball.transition()
+                .delay(delay + index * 500) // Delay each step
+                .duration(500) // Duration of each step
+                .attr("cx", cx)
+                .attr("cy", cy);
+        });
+    }
+
+    // Start the animation for each ball with a delay of 0.2 seconds between each ball
+    let delay = 0;
+    ballsData.forEach(ballData => {
+        animateBall(ballData, delay);
+        delay += 200; // Increase delay by 0.2 seconds for each ball
     });
-}).catch(function(error) {
-    console.error("Error al cargar los datos:", error); // Mensaje de depuración
+});
+// Falling balls SVG
+const fallingBallsSvg = d3.select("#fallingBalls");
+
+// Histogram SVG
+const histogramSvg = d3.select("#histogram");
+
+// Load cuadrantes data and draw histogram
+d3.json("cuadrantes.json").then(cuadrantes => {
+    const padding = 20;
+    const width = +histogramSvg.attr("width") - 2 * padding;
+    const height = +histogramSvg.attr("height") - 2 * padding;
+
+    const xScale = d3.scaleLinear()
+        .domain([0, cuadrantes.length - 1])
+        .range([padding, width + padding]);
+
+    const yScale = d3.scaleLinear()
+        .domain([0, d3.max(cuadrantes)])
+        .range([height + padding, padding]);
+
+    const barWidth = (width / cuadrantes.length) - 2;
+
+    histogramSvg.selectAll(".bar")
+        .data(cuadrantes)
+        .enter()
+        .append("rect")
+        .attr("class", "bar")
+        .attr("x", (d, i) => xScale(i))
+        .attr("y", d => yScale(d))
+        .attr("width", barWidth)
+        .attr("height", d => height + padding - yScale(d))
+        .attr("fill", "steelblue");
+
+    // X Axis
+    const xAxis = d3.axisBottom(xScale).ticks(cuadrantes.length);
+    histogramSvg.append("g")
+        .attr("transform", `translate(0, ${height + padding})`)
+        .call(xAxis);
+
+    // Y Axis
+    const yAxis = d3.axisLeft(yScale);
+    histogramSvg.append("g")
+        .attr("transform", `translate(${padding}, 0)`)
+        .call(yAxis);
 });

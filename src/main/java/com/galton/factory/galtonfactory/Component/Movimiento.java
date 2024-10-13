@@ -1,12 +1,29 @@
 package com.galton.factory.galtonfactory.Component;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.ArrayList;
+import java.util.List;
 
-//Clase buffer, almacena movimiento de bolas
-@Data
-@AllArgsConstructor
 public class Movimiento {
-    private double posicionX;
-    private double posicionY;
+    public double posicionX;
+    public double posicionY;
+    public int nivel;
+    private static List<Movimiento> movimientos = new ArrayList<>();
+
+    public Movimiento(double posicionX, double posicionY, int nivel) {
+        this.posicionX = posicionX;
+        this.posicionY = posicionY;
+        this.nivel = nivel;
+        movimientos.add(this);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("{\"posicionX\": %f, \"posicionY\": %f, \"nivel\": %d}", posicionX, posicionY, nivel);
+    }
+
+    public static String exportMovimientosToJson() throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.writeValueAsString(movimientos);
+    }
 }

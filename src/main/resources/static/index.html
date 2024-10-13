@@ -6,6 +6,32 @@
     <title>Visualización Campana de Gauss</title>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+        }
+        .left, .right {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .left {
+            border-right: 1px solid black;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
         svg {
             border: 1px solid black;
         }
@@ -17,8 +43,16 @@
     </style>
 </head>
 <body>
-<h1>Visualización de la Campana de Gauss</h1>
-<svg width="600" height="600"></svg>
+<div class="container">
+    <div class="left">
+        <h1>Visualización de la Campana de Gauss</h1>
+        <svg id="fallingBalls" width="400" height="800"></svg>
+    </div>
+    <div class="right">
+        <h1>Histograma</h1>
+        <svg id="histogram" width="400" height="800"></svg>
+    </div>
+</div>
 <script src="script.js"></script>
 </body>
 </html>

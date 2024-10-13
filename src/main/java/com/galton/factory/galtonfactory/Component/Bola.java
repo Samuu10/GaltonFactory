@@ -1,7 +1,7 @@
-// src/main/java/com/galton/factory/galtonfactory/Component/Bola.java
 package com.galton.factory.galtonfactory.Component;
 
 import com.galton.factory.galtonfactory.Handler.MovimientoHandler;
+import com.galton.factory.galtonfactory.Handler.MovimientoHandler.Movimiento;
 import lombok.Data;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Bola implements Component, Runnable {
+    private int ballId; // Add ballId field
     private double posicionX;
     private double posicionY;
     private int tamano;
@@ -18,11 +19,12 @@ public class Bola implements Component, Runnable {
 
     private void mover() {
         posicionY += 10;
+        int nivel = (int) (posicionY / 10); //calcula en que nivel esta
         synchronized (tablero) {
             posicionX = tablero.moverBola(posicionX);
         }
         try {
-            movimientoHandler.sendMovimiento(new Movimiento(posicionX, posicionY));
+            movimientoHandler.sendMovimiento(new Movimiento(ballId, posicionX, posicionY, nivel)); // Pass ballId
         } catch (Exception e) {
             e.printStackTrace();
         }
